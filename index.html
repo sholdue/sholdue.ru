@@ -1,63 +1,217 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>sholdue</title>
-
+<title>Lain Style Fullscreen</title>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
 <style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: black;
+    overflow: hidden;
+    font-family: 'Fira Code', monospace;
+  }
 
-body{
-    margin:0;
-    height:100vh;
-    font-family:'Arial';
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:url("https://animesher.com/orig/0/16/164/1645/animesher.com_gif-lain-sad-164512.gif") no-repeat center center/cover;
-}
+  #bg-gif {
+    width: 100%;
+    height: 100%;
+    object-fit:contain;
+    display: block;
+  }
 
-.overlay{
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:rgba(0,0,0,0.5);
-}
+  #progress-container {
+    position: fixed;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 300px;
+    height: 20px;
+    background: black;
+    border: 2px solid #0066ff;
+    display: none;
+  }
 
-.links{
-    position:relative;
-    display:flex;
-    flex-direction:column;
-    gap:20px;
-}
+  #progress-bar {
+    height: 100%;
+    width: 0%;
+    background: rgb(0, 110, 255);
+  }
 
-a{
-    color:white;
-    text-decoration:none;
-    border:1px solid white;
-    padding:12px 40px;
-    text-align:center;
-    background:rgba(0,0,0,0.6);
-    transition:0.2s;
-}
+  #console {
+    display: none;
+    background: black;
+    color: rgb(0, 195, 255);
+    font-family: 'Fira Code', monospace;
+    padding: 20px;
+    height: 100vh;
+    overflow-y: auto;
+    white-space: pre-wrap;
+  }
 
-a:hover{
-    background:white;
-    color:black;
-    box-shadow:0 0 10px white,0 0 20px white;
-}
+  #output div {
+    margin-bottom: 15px;
+  }
+
+  #input-container {
+    display: flex;
+    align-items: center;
+  }
+
+  #input-container span {
+    color: rgb(70, 107, 177);
+    margin-right: 5px;
+  }
+
+  #console input {
+    background: black;
+    color: rgb(0, 119, 255);
+    border: none;
+    outline: none;
+    font-family: 'Fira Code', monospace;
+    width: 100%;
+  }
 </style>
 </head>
-
 <body>
 
-<div class="overlay"></div>
+<img id="bg-gif" src="lain.gif" alt="Background GIF">
 
-<div class="links">
-<a href="https://open.spotify.com/user/3126kds4uuxbhgbyol6kn37vqa2q?si=d2ec3b145dfb467f" target="_blank">spotify</a>
-<a href="https://github.com/sholdue" target="_blank">github</a>
-<a href="https://steamcommunity.com/id/sholdue/" target="_blank">steam</a>
-<a href="https://t.me/sholdue" target="_blank">telegram</a>
+<div id="progress-container">
+  <div id="progress-bar"></div>
 </div>
+
+<div id="console">
+  <div id="output">Type "help" for commands</div>
+  <div id="input-container">
+    <span>>>></span>
+    <input id="input" autocomplete="off" />
+  </div>
+</div>
+
+<script>
+  // GIF switching
+  const gifs = ["lain.gif", "lain2.gif", "lain3.gif", "lain4.gif"];
+  let index = 0;
+  setInterval(() => {
+    index = (index + 1) % gifs.length;
+    document.getElementById('bg-gif').src = gifs[index];
+  }, 2900);
+
+  // Progress bar
+  const progressContainer = document.getElementById('progress-container');
+  const progressBar = document.getElementById('progress-bar');
+  let progressInterval = null;
+  let consoleShown = false;
+
+  function startHold() {
+    if (progressInterval || consoleShown) return;
+    progressContainer.style.display = 'block';
+    progressBar.style.width = '0%';
+    let startTime = Date.now();
+    progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const percent = Math.min((elapsed / 5000) * 100, 100);
+      progressBar.style.width = percent + '%';
+      if (percent >= 100) {
+        clearInterval(progressInterval);
+        progressInterval = null;
+        showConsole();
+      }
+    }, 50);
+  }
+
+  function stopHold() {
+    clearInterval(progressInterval);
+    progressInterval = null;
+    progressBar.style.width = '0%';
+    progressContainer.style.display = 'none';
+  }
+
+  // Mouse, touch, keyboard
+  document.addEventListener('mousedown', startHold);
+  document.addEventListener('mouseup', stopHold);
+  document.addEventListener('touchstart', startHold);
+  document.addEventListener('touchend', stopHold);
+  document.addEventListener('keydown', (e) => {
+    if (!consoleShown && (e.code === 'Space' || e.code === 'Enter')) startHold();
+  });
+  document.addEventListener('keyup', (e) => {
+    if (!consoleShown && (e.code === 'Space' || e.code === 'Enter')) stopHold();
+  });
+
+  // Console
+  function showConsole() {
+    consoleShown = true;
+    document.getElementById('bg-gif').style.display = 'none';
+    document.getElementById('progress-container').style.display = 'none';
+    const consoleEl = document.getElementById('console');
+    consoleEl.style.display = 'block';
+    const input = document.getElementById('input');
+    const output = document.getElementById('output');
+    input.focus();
+
+    const commands = {
+      help: 'Available commands: help, echo, date, random, greet, clear',
+      echo: (args) => args.join(' '),
+      date: () => new Date().toString(),
+      random: () => Math.random().toString(),
+      greet: () => 'Welcome to sholdue page.',
+      diomentia: () => 'WOAH 😳',
+      wulverien: () => '<3',
+      burgerz: () => 'brgzwillfind',
+      clear: () => { 
+        output.innerHTML = '';  
+        return '';               
+      },
+    };
+
+    let history = [];
+    let historyIndex = -1;
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const [cmd, ...args] = input.value.split(' ');
+        const commandDiv = document.createElement('div');
+        commandDiv.textContent = `>>> ${input.value}`;
+        output.appendChild(commandDiv);
+
+        const resultDiv = document.createElement('div');
+        if (commands[cmd]) {
+          const result = typeof commands[cmd] === 'function' ? commands[cmd](args) : commands[cmd];
+          resultDiv.textContent = result;
+        } else {
+          resultDiv.textContent = 'Command not found';
+        }
+        output.appendChild(resultDiv);
+
+        if (input.value.trim() !== '') {
+          history.push(input.value);
+          historyIndex = history.length;
+        }
+
+        input.value = '';
+        output.scrollTop = output.scrollHeight;
+      } else if (e.key === 'ArrowUp') {
+        if (historyIndex > 0) {
+          historyIndex--;
+          input.value = history[historyIndex];
+        }
+        e.preventDefault();
+      } else if (e.key === 'ArrowDown') {
+        if (historyIndex < history.length - 1) {
+          historyIndex++;
+          input.value = history[historyIndex];
+        } else {
+          historyIndex = history.length;
+          input.value = '';
+        }
+        e.preventDefault();
+      }
+    });
+  }
+</script>
 
 </body>
 </html>
