@@ -1,217 +1,329 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
+
 <head>
-<meta charset="UTF-8">
-<title>sholdue</title>
-<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: black;
-    overflow: hidden;
-    font-family: 'Fira Code', monospace;
-  }
+  <meta charset="UTF-8">
+  <title>sholdue</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Unbounded:wght@300;700&display=swap"
+    rel="stylesheet">
+  <style>
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-  #bg-gif {
-    width: 100%;
-    height: 100%;
-    object-fit:contain;
-    display: block;
-  }
+    body {
+      min-height: 100vh;
+      background: black;
+      background-image: url("b.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      font-family: "Space Mono", monospace;
+      color: #f0ece4;
+      position: relative;
+    }
 
-  #progress-container {
-    position: fixed;
-    bottom: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 300px;
-    height: 20px;
-    background: black;
-    border: 2px solid #0066ff;
-    display: none;
-  }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 0;
+    }
 
-  #progress-bar {
-    height: 100%;
-    width: 0%;
-    background: rgb(0, 110, 255);
-  }
+    .top {
+      position: relative;
+      z-index: 1;
+      padding: 52px 48px 120px;
+      max-width: 720px;
+    }
 
-  #console {
-    display: none;
-    background: black;
-    color: rgb(0, 195, 255);
-    font-family: 'Fira Code', monospace;
-    padding: 20px;
-    height: 100vh;
-    overflow-y: auto;
-    white-space: pre-wrap;
-  }
+    .site-title {
+      font-family: "Unbounded", sans-serif;
+      font-weight: 700;
+      font-size: clamp(28px, 5vw, 48px);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #f0ece4;
+      line-height: 1;
+      margin-bottom: 40px;
+      text-shadow: 0 0 24px rgba(240, 236, 228, 0.25);
+    }
 
-  #output div {
-    margin-bottom: 15px;
-  }
+    .section-label {
+      font-family: "Unbounded", sans-serif;
+      font-weight: 300;
+      font-size: 10px;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: rgba(240, 236, 228, 0.45);
+      margin-bottom: 12px;
+      margin-top: 36px;
+    }
 
-  #input-container {
-    display: flex;
-    align-items: center;
-  }
+    .section-label:first-of-type {
+      margin-top: 0;
+    }
 
-  #input-container span {
-    color: rgb(70, 107, 177);
-    margin-right: 5px;
-  }
+    .item {
+      margin: 6px 0;
+      font-size: 13px;
+      line-height: 1.6;
+    }
 
-  #console input {
-    background: black;
-    color: rgb(0, 119, 255);
-    border: none;
-    outline: none;
-    font-family: 'Fira Code', monospace;
-    width: 100%;
-  }
-</style>
+    a {
+      color: #f0ece4;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      flex-wrap: wrap;
+      transition: opacity 0.2s;
+    }
+
+    .social-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+
+    .tooltip.copied {
+      background: rgba(77, 255, 136, 0.15);
+      border-color: rgba(77, 255, 136, 0.3);
+      color: #6dffa0;
+    }
+
+    .tooltip {
+      position: absolute;
+      bottom: calc(100% + 8px);
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(20, 20, 20, 0.95);
+      border: 1px solid rgba(240, 236, 228, 0.15);
+      color: #f0ece4;
+      font-size: 11px;
+      padding: 5px 10px;
+      border-radius: 4px;
+      white-space: nowrap;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.15s;
+    }
+
+    .tooltip::after {
+      content: "";
+      position: absolute;
+      top: 100%;
+      left: 50%;
+      transform: translateX(-50%);
+      border: 5px solid transparent;
+      border-top-color: rgba(240, 236, 228, 0.15);
+    }
+
+    .social-wrapper:hover .tooltip,
+    .social-wrapper:focus-within .tooltip {
+      opacity: 1;
+    }
+
+    a:hover {
+      opacity: 0.55;
+    }
+
+    .no-link {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 7px;
+      flex-wrap: wrap;
+      color: rgba(240, 236, 228, 0.5);
+      font-size: 13px;
+    }
+
+    .tag {
+      font-family: "Space Mono", monospace;
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      padding: 2px 6px;
+      border-radius: 2px;
+      flex-shrink: 0;
+      line-height: 1.6;
+    }
+
+    .tag-game {
+      background: rgba(77, 166, 255, 0.18);
+      color: #7ac4ff;
+      border: 1px solid rgba(77, 166, 255, 0.35);
+    }
+
+    .tag-guide {
+      background: rgba(77, 255, 136, 0.15);
+      color: #6dffa0;
+      border: 1px solid rgba(77, 255, 136, 0.3);
+    }
+
+    .tag-tba {
+      background: rgba(255, 255, 255, 0.06);
+      color: rgba(240, 236, 228, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .tag-official {
+      background: rgba(255, 210, 77, 0.15);
+      color: #ffd97a;
+      border: 1px solid rgba(255, 210, 77, 0.3);
+    }
+
+    .tag-fan {
+      background: rgba(255, 122, 122, 0.15);
+      color: #ff9e9e;
+      border: 1px solid rgba(255, 122, 122, 0.3);
+    }
+
+    .tag-plain {
+      background: rgba(255, 255, 255, 0.08);
+      color: rgba(240, 236, 228, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    .item-name {
+      color: #f0ece4;
+    }
+
+    .no-link .item-name {
+      color: rgba(240, 236, 228, 0.5);
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: rgba(240, 236, 228, 0.2);
+      margin: 32px 0;
+    }
+
+    .info {
+      pointer-events: auto;
+      z-index: 10;
+      position: fixed;
+      bottom: 24px;
+      left: 48px;
+      font-size: 12px;
+      z-index: 1;
+      letter-spacing: 0.04em;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .info a {
+      color: rgba(240, 236, 228, 0.5);
+      text-decoration: none;
+      display: inline;
+      transition: color 0.2s, opacity 0.2s;
+    }
+
+    .info a:hover {
+      color: #f0ece4;
+      opacity: 1;
+    }
+
+    .socials {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .socials .sep {
+      color: rgba(240, 236, 228, 0.2);
+      font-size: 10px;
+      pointer-events: none;
+    }
+
+    .email {
+      color: rgba(240, 236, 228, 0.35) !important;
+      font-size: 11px;
+    }
+  </style>
 </head>
+
 <body>
+  <div class="top">
+    <h1 class="site-title">Sholdue</h1>
 
-<img id="bg-gif" src="lain.gif" alt="Background GIF">
+    <div class="section-label">Stuff</div>
 
-<div id="progress-container">
-  <div id="progress-bar"></div>
-</div>
+    <div class="item">
+      <a target="_blank" href="https://store.steampowered.com/app/2824230/last_seen_online/">
+        <span class="tag tag-game">GAME</span>
+        <span class="item-name">Last seen online</span>
+        <span class="tag tag-official">OFFICIAL RU/UA TRANSLATION</span>
+      </a>
+    </div>
+    <div class="item">
+      <a target="_blank" href="https://steamcommunity.com/sharedfiles/filedetails/?id=3453809143">
+        <span class="tag tag-game">GAME</span>
+        <span class="item-name">ENA: Dream BBQ</span>
+        <span class="tag tag-fan">FAN RU TRANSLATION</span>
+      </a>
+    </div>
+    <div class="item">
+      <a target="_blank" href="https://steamcommunity.com/sharedfiles/filedetails/?id=2976010708">
+        <span class="tag tag-guide">GUIDE</span>
+        <span class="item-name">Quake III Arena</span>
+        <span class="tag tag-plain">DOCS FOR Q3: MME</span>
+      </a>
+    </div>
 
-<div id="console">
-  <div id="output">Type "help" for commands</div>
-  <div id="input-container">
-    <span>>>></span>
-    <input id="input" autocomplete="off" />
+    <div class="divider"></div>
+
+    <div class="section-label">Own stuff</div>
+
+    <div class="item">
+      <div class="no-link">
+        <span class="tag tag-game">GAME</span>
+        <span class="item-name">SHIZOPHOBIA</span>
+        <span class="tag tag-tba">TBA</span>
+      </div>
+    </div>
+    <div class="item">
+      <div class="no-link">
+        <span class="tag tag-game">GAME</span>
+        <span class="item-name">MAKE ME SAD</span>
+        <span class="tag tag-tba">TBA</span>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-  // GIF switching
-  const gifs = ["lain.gif", "lain2.gif", "lain3.gif", "lain4.gif"];
-  let index = 0;
-  setInterval(() => {
-    index = (index + 1) % gifs.length;
-    document.getElementById('bg-gif').src = gifs[index];
-  }, 2900);
-
-  // Progress bar
-  const progressContainer = document.getElementById('progress-container');
-  const progressBar = document.getElementById('progress-bar');
-  let progressInterval = null;
-  let consoleShown = false;
-
-  function startHold() {
-    if (progressInterval || consoleShown) return;
-    progressContainer.style.display = 'block';
-    progressBar.style.width = '0%';
-    let startTime = Date.now();
-    progressInterval = setInterval(() => {
-      const elapsed = Date.now() - startTime;
-      const percent = Math.min((elapsed / 5000) * 100, 100);
-      progressBar.style.width = percent + '%';
-      if (percent >= 100) {
-        clearInterval(progressInterval);
-        progressInterval = null;
-        showConsole();
-      }
-    }, 50);
-  }
-
-  function stopHold() {
-    clearInterval(progressInterval);
-    progressInterval = null;
-    progressBar.style.width = '0%';
-    progressContainer.style.display = 'none';
-  }
-
-  // Mouse, touch, keyboard
-  document.addEventListener('mousedown', startHold);
-  document.addEventListener('mouseup', stopHold);
-  document.addEventListener('touchstart', startHold);
-  document.addEventListener('touchend', stopHold);
-  document.addEventListener('keydown', (e) => {
-    if (!consoleShown && (e.code === 'Space' || e.code === 'Enter')) startHold();
-  });
-  document.addEventListener('keyup', (e) => {
-    if (!consoleShown && (e.code === 'Space' || e.code === 'Enter')) stopHold();
-  });
-
-  // Console
-  function showConsole() {
-    consoleShown = true;
-    document.getElementById('bg-gif').style.display = 'none';
-    document.getElementById('progress-container').style.display = 'none';
-    const consoleEl = document.getElementById('console');
-    consoleEl.style.display = 'block';
-    const input = document.getElementById('input');
-    const output = document.getElementById('output');
-    input.focus();
-
-    const commands = {
-      help: 'Available commands: help, echo, date, random, greet, clear',
-      echo: (args) => args.join(' '),
-      date: () => new Date().toString(),
-      random: () => Math.random().toString(),
-      greet: () => 'Welcome to sholdue page.',
-      diomentia: () => 'WOAH 😳',
-      wulverien: () => '<3',
-      burgerz: () => '#brgzwillfind',
-      clear: () => { 
-        output.innerHTML = '';  
-        return '';               
-      },
-    };
-
-    let history = [];
-    let historyIndex = -1;
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') {
-        const [cmd, ...args] = input.value.split(' ');
-        const commandDiv = document.createElement('div');
-        commandDiv.textContent = `>>> ${input.value}`;
-        output.appendChild(commandDiv);
-
-        const resultDiv = document.createElement('div');
-        if (commands[cmd]) {
-          const result = typeof commands[cmd] === 'function' ? commands[cmd](args) : commands[cmd];
-          resultDiv.textContent = result;
-        } else {
-          resultDiv.textContent = 'Command not found';
-        }
-        output.appendChild(resultDiv);
-
-        if (input.value.trim() !== '') {
-          history.push(input.value);
-          historyIndex = history.length;
-        }
-
-        input.value = '';
-        output.scrollTop = output.scrollHeight;
-      } else if (e.key === 'ArrowUp') {
-        if (historyIndex > 0) {
-          historyIndex--;
-          input.value = history[historyIndex];
-        }
-        e.preventDefault();
-      } else if (e.key === 'ArrowDown') {
-        if (historyIndex < history.length - 1) {
-          historyIndex++;
-          input.value = history[historyIndex];
-        } else {
-          historyIndex = history.length;
-          input.value = '';
-        }
-        e.preventDefault();
-      }
-    });
-  }
-</script>
-
+  <div class="info">
+    <div class="socials">
+      <a target="_blank" href="https://t.me/sholdue">Telegram</a>
+      <span class="sep">/</span>
+      <a target="_blank" href="https://github.com/sholdue">GitHub</a>
+      <span class="sep">/</span>
+      <span class="social-wrapper" onclick="
+          navigator.clipboard.writeText('icepicklodge');
+          const t = this.querySelector('.tooltip');
+          t.textContent = 'Copied!';
+          t.classList.add('copied');
+          setTimeout(() => {
+            t.textContent = 'icepicklodge';
+            t.classList.remove('copied');
+          }, 1500);
+        ">
+      <a>Discord</a>
+        <span class="tooltip">icepicklodge</span>
+      </span>
+      <span class="sep">/</span>
+      <a target="_blank" href="https://www.reddit.com/user/Desperate-Unit9812/">Reddit</a>
+      <span class="sep">/</span>
+      <a target="_blank" href="https://steamcommunity.com/id/sholdue/">Steam</a>
+    </div>
+    <a class="email" href="mailto:tension@sholdue.ru">tension@sholdue.ru</a>
+  </div>
 </body>
+
 </html>
