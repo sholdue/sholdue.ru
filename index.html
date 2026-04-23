@@ -1,1 +1,276 @@
-empty page
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sholdue</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css"> 
+    <style>
+        @font-face {
+            font-family: 'MS Sans Serif';
+            src: url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.eot');
+            src: url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.eot?#iefix') format('embedded-opentype'),
+            url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.woff2') format('woff2'),
+            url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.woff') format('woff'),
+            url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.ttf') format('truetype'),
+            url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.svg#MS Sans Serif') format('svg');
+        }
+
+        body {
+            background-color: #008080;
+            font-family: "MS Sans Serif", "Tahoma", sans-serif;
+            -webkit-font-smoothing: none;
+            -moz-osx-font-smoothing: grayscale;
+            font-smooth: never;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .window {
+            width: 750px;
+            background-color: #c0c0c0;
+            border: 2px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            box-shadow: 2px 2px 0px black;
+            padding: 2px;
+        }
+
+        .title-bar {
+            background: linear-gradient(90deg, #000080, #1084d0);
+            padding: 3px 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            font-weight: bold;
+            font-size: 11px;
+        }
+
+        .title-bar-controls {
+            display: flex;
+            gap: 2px;
+        }
+
+        .win-btn {
+            width: 16px;
+            height: 14px;
+            background-color: #c0c0c0;
+            border: 1px solid;
+            border-color: #ffffff #808080 #808080 #ffffff;
+            color: black;
+            font-size: 9px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: default;
+            font-family: sans-serif;
+        }
+
+        .win-btn:active {
+            border-color: #808080 #ffffff #ffffff #808080;
+            padding: 1px 0 0 1px;
+        }
+
+        .window-body {
+            padding: 15px;
+        }
+
+        .social-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .social-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #d0d0d0;
+            border: 1px inset #fff;
+            padding: 3px 8px;
+            font-size: 11px;
+            text-decoration: none;
+            color: black;
+        }
+
+        .pixel-icon {
+            width: 16px;
+            height: 16px;
+            image-rendering: pixelated;
+        }
+
+        .content-inset {
+            background: white;
+            border: 2px inset #808080;
+            padding: 15px;
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        h1 { font-size: 20px; margin: 0 0 5px 0; font-weight: bold; }
+        h2 { font-size: 11px; background: #c0c0c0; border: 1px solid #808080; padding: 2px 5px; margin: 15px 0 10px 0; display: inline-block; font-weight: bold; }
+        
+        ul { list-style: square; padding-left: 20px; margin: 5px 0; }
+        li { margin-bottom: 3px; }
+        a { color: #0000FF; }
+        a:visited { color: #800080; }
+        a:hover { color: #FF0000; }
+
+        .category-header {
+            font-weight: bold;
+            color: #000;
+            display: block;
+            margin-top: 10px;
+            font-size: 11px;
+        }
+
+        .music-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .album-card {
+            border: 1px solid #808080;
+            padding: 5px;
+            background: #d0d0d0;
+            text-align: center;
+            box-shadow: 1px 1px 0px #fff inset;
+        }
+
+        .album-cover {
+            width: 100%;
+            aspect-ratio: 1/1;
+            background: #000;
+            object-fit: cover;
+            border: 1px inset #fff;
+        }
+
+        .album-name {
+            font-size: 10px;
+            margin-top: 5px;
+            display: block;
+            height: 24px;
+            overflow: hidden;
+            line-height: 1.2;
+        }
+
+        .status-bar {
+            border-top: 1px solid #808080;
+            margin-top: 10px;
+            padding-top: 5px;
+            display: flex;
+            gap: 5px;
+            font-size: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="window">
+    <div class="title-bar">
+        <div class="title-bar-text">🌐 C:\Sholdue\index.html</div>
+        <div class="title-bar-controls">
+            <div class="win-btn">_</div>
+            <div class="win-btn">□</div>
+            <div class="win-btn">×</div>
+        </div>
+    </div>
+
+    <div class="window-body">
+        <h1>Sholdue</h1>
+        <p style="font-size: 12px;"><b>Programmer</b> (JS, TS, GDScript.)</p>
+        <p><b>indie developer</b> (Gamedesign, Programming). </p>
+
+        <div class="social-bar">
+            <a href="https://github.com/sholdue" class="social-item">
+                <img src="https://img.icons8.com/ios-filled/50/000000/github.png" class="pixel-icon"> GitHub
+            </a>
+            <a href="https://www.reddit.com/user/Desperate-Unit9812/" class="social-item">
+                <img src="https://img.icons8.com/ios-filled/50/000000/reddit.png" class="pixel-icon"> Reddit
+            </a>
+            <div class="social-item">
+                <img src="https://img.icons8.com/ios-filled/50/000000/discord-logo.png" class="pixel-icon"> 
+                icepicklodge
+            </div>
+        </div>
+
+        <div class="content-inset">
+            <h2>Current projects</h2>
+            <ul>
+                <li><a href="https://discord.gg/kub6gX4mTb">Make me sad</a></li>
+                <li>Helping: <a href="https://x.com/re_serialexp">RE: Serial experiments</a></li>
+            </ul>
+
+            <h2>Other stuff</h2>
+            <ul>
+                <li><a href="https://store.steampowered.com/app/2824230/last_seen_online/">Russian/Ukrainian for "last seen online"</a></li>
+                <li><a href="https://github.com/bazelik-null/ENAbbq_rus">Russian for ENA: Dream BBQ</a></li>
+                <li><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2976010708">Documentation for Q3:MME</a></li>
+            </ul>
+        </div>
+
+        <h2>I recommend</h2>
+        <div class="content-inset">
+            <span class="category-header">Must play</span>
+            <ul>
+                <li><a href="https://store.steampowered.com/app/238010/Deus_Ex_Human_Revolution__Directors_Cut/">Deus Ex: Human Revolution</a></li>
+                <li><a href="https://store.steampowered.com/app/1410640/Syberia_The_World_Before/">Syberia: The World Before</a></li>
+                <li><a href="https://en.wikipedia.org/wiki/Fatal_Frame_(video_game)">Fatal Frame</a></li>
+                <li><a href="https://store.steampowered.com/app/410710/System_Shock_Enhanced_Edition/">System Shock: EE</a></li>
+                <li><a href="https://store.steampowered.com/app/283290/Nosferatu_The_Wrath_of_Malachi/">Nosferatu: The Wrath of Malachi</a></li>
+            </ul>
+
+            <span class="category-header">Good</span>
+            <ul>
+                <li><a href="https://store.steampowered.com/app/1262350/SIGNALIS/">SIGNALIS</a></li>
+                <li><a href="https://store.steampowered.com/app/2200/Quake_III_Arena/">Quake III Arena</a></li>
+                <li><a href="https://store.steampowered.com/bundle/3782/Fallout_Franchise_Bundle/">Fallout (1, 2, 3)</a></li>
+                <li><a href="https://store.steampowered.com/app/1002300/Fear__Hunger/">Fear & Hunger</a></li>
+                <li><a href="https://store.steampowered.com/app/2622380/ELDEN_RING_NIGHTREIGN/">ELDEN RING NIGHTREIGN</a></li>
+                <li><a href="https://store.steampowered.com/app/760160/Vampire_The_Masquerade__Bloodhunt/">Vampire: Bloodhunt</a></li>
+                <li><a href="https://store.steampowered.com/app/255320/Edna__Harvey_The_Breakout/">Edna & Harvey</a></li>
+                <li><a href="https://store.steampowered.com/app/1386900/Observer_System_Redux/">Observer: System Redux</a></li>
+            </ul>
+        </div>
+
+        <h2>Music Favorites</h2>
+        <div class="music-section">
+            <div class="album-card">
+                <img src="https://f4.bcbits.com/img/a0393374401_16.jpg" class="album-cover">
+                <span class="album-name">Agent Side Grinder - Stripdown</span>
+            </div>
+            <div class="album-card">
+                <img src="https://m.media-amazon.com/images/I/71EYmWxcmdL._UF1000,1000_QL80_.jpg" class="album-cover">
+                <span class="album-name">Kanye West - My Beautiful Dark Twisted Fantasy</span>
+            </div>
+            <div class="album-card">
+                <img src="https://i.scdn.co/image/ab67616d0000b273cfd93d36fe2365f9436587d1" class="album-cover">
+                <span class="album-name">Anri - Timely!!</span>
+            </div>
+            <div class="album-card">
+                <img src="https://i.discogs.com/N8yseavoo9ZQ2IyqHSW3pDs2ADALXKQ1sbUA03Qd8aI/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNzY3/NDI2LTE1NjA2ODY1/MjUtODI4NC5qcGVn.jpeg" class="album-cover">
+                <span class="album-name">ZABADAK - Pieces Of The Moon</span>
+            </div>
+            <div class="album-card">
+                <img src="https://media.pitchfork.com/photos/5929ae46c0084474cd0c188c/master/pass/04192b63.jpg" class="album-cover">
+                <span class="album-name">Tame Impala - Currents</span>
+            </div>
+
+        </div>
+
+        <div class="status-bar">
+            <span>Items: 20</span>
+            <span>|</span>
+            <span>Mem: 640KB</span>
+            <span>|</span>
+            <span style="color: green;">● System OK</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
