@@ -1,276 +1,475 @@
+
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sholdue</title>
-    <link rel="stylesheet" href="https://unpkg.com/98.css"> 
+    <title>SHOLDUE // WIRED_GATE_v4.26</title>
+    <!-- Подключаем пак иконок Lucide для киберпанк-элементов -->
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        @font-face {
-            font-family: 'MS Sans Serif';
-            src: url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.eot');
-            src: url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.eot?#iefix') format('embedded-opentype'),
-            url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.woff2') format('woff2'),
-            url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.woff') format('woff'),
-            url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.ttf') format('truetype'),
-            url('https://db.onlinewebfonts.com/t/62fd9e995f33f95e86551b326079ed3d.svg#MS Sans Serif') format('svg');
+        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=DotGothic16&display=swap');
+
+        :root {
+            --bg-color: #0a0a0f;
+            --panel-bg: rgba(16, 16, 24, 0.85);
+            --border-color: #2a2b3d;
+            --accent-green: #00ff66;
+            --accent-purple: #bd00ff;
+            --text-main: #e2e4f0;
+            --text-muted: #626585;
+            --glow: 0 0 10px rgba(0, 255, 102, 0.3);
+            --glow-purple: 0 0 10px rgba(189, 0, 255, 0.3);
+        }
+
+        * {
+            box-sizing: border-box;
         }
 
         body {
-            background-color: #008080;
-            font-family: "MS Sans Serif", "Tahoma", sans-serif;
-            -webkit-font-smoothing: none;
-            -moz-osx-font-smoothing: grayscale;
-            font-smooth: never;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Fira Code', 'DotGothic16', monospace;
             margin: 0;
+            padding: 40px 20px;
             display: flex;
             justify-content: center;
-            padding: 20px;
+            align-items: center;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
         }
 
-        .window {
-            width: 750px;
-            background-color: #c0c0c0;
-            border: 2px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
-            box-shadow: 2px 2px 0px black;
-            padding: 2px;
+        /* Эффект ЭЛТ-монитора */
+        body::before {
+            content: " ";
+            display: block;
+            position: fixed;
+            top: 0; left: 0; bottom: 0; right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 999;
+            background-size: 100% 4px, 6px 100%;
+            pointer-events: none;
         }
 
-        .title-bar {
-            background: linear-gradient(90deg, #000080, #1084d0);
-            padding: 3px 5px;
+        .terminal-container {
+            width: 100%;
+            max-width: 950px;
+            background: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-top: 4px solid var(--accent-purple);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            backdrop-filter: blur(4px);
+        }
+
+        .term-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            color: white;
-            font-weight: bold;
-            font-size: 11px;
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 12px;
+            letter-spacing: 1px;
         }
 
-        .title-bar-controls {
+        .term-status {
             display: flex;
-            gap: 2px;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent-green);
+            text-shadow: var(--glow);
         }
 
-        .win-btn {
-            width: 16px;
-            height: 14px;
-            background-color: #c0c0c0;
-            border: 1px solid;
-            border-color: #ffffff #808080 #808080 #ffffff;
-            color: black;
-            font-size: 9px;
+        .pulse-dot {
+            width: 6px;
+            height: 6px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 1.5s infinite;
+        }
+
+        .term-grid {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 550px;
+        }
+
+        /* Сайдбар */
+        .term-sidebar {
+            border-right: 1px solid var(--border-color);
+            padding: 30px 20px;
+            background: rgba(8, 8, 12, 0.5);
+        }
+
+        .avatar-area {
+            border: 1px dashed var(--border-color);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--accent-purple);
             display: flex;
             justify-content: center;
             align-items: center;
-            cursor: default;
-            font-family: sans-serif;
         }
 
-        .win-btn:active {
-            border-color: #808080 #ffffff #ffffff #808080;
-            padding: 1px 0 0 1px;
+        .profile-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: #fff;
+            margin: 0 0 5px 0;
+            letter-spacing: -0.5px;
         }
 
-        .window-body {
-            padding: 15px;
+        .profile-tag {
+            font-size: 11px;
+            color: var(--accent-purple);
+            text-transform: uppercase;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 20px;
         }
 
-        .social-bar {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+        .info-block {
+            margin-bottom: 20px;
+            font-size: 13px;
+            line-height: 1.6;
         }
 
-        .social-item {
+        .info-label {
+            color: var(--text-muted);
+            font-size: 11px;
             display: flex;
             align-items: center;
             gap: 6px;
-            background: #d0d0d0;
-            border: 1px inset #fff;
-            padding: 3px 8px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        /* Основная панель */
+        .term-main {
+            padding: 30px;
+            overflow-y: auto;
+        }
+
+        .content-section {
+            margin-bottom: 35px;
+        }
+
+        .section-title {
             font-size: 11px;
-            text-decoration: none;
-            color: black;
-        }
-
-        .pixel-icon {
-            width: 16px;
-            height: 16px;
-            image-rendering: pixelated;
-        }
-
-        .content-inset {
-            background: white;
-            border: 2px inset #808080;
-            padding: 15px;
+            text-transform: uppercase;
+            color: var(--accent-green);
+            letter-spacing: 2px;
             margin-bottom: 15px;
-            font-size: 12px;
-        }
-
-        h1 { font-size: 20px; margin: 0 0 5px 0; font-weight: bold; }
-        h2 { font-size: 11px; background: #c0c0c0; border: 1px solid #808080; padding: 2px 5px; margin: 15px 0 10px 0; display: inline-block; font-weight: bold; }
-        
-        ul { list-style: square; padding-left: 20px; margin: 5px 0; }
-        li { margin-bottom: 3px; }
-        a { color: #0000FF; }
-        a:visited { color: #800080; }
-        a:hover { color: #FF0000; }
-
-        .category-header {
-            font-weight: bold;
-            color: #000;
-            display: block;
-            margin-top: 10px;
-            font-size: 11px;
-        }
-
-        .music-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
-        }
-
-        .album-card {
-            border: 1px solid #808080;
-            padding: 5px;
-            background: #d0d0d0;
-            text-align: center;
-            box-shadow: 1px 1px 0px #fff inset;
-        }
-
-        .album-cover {
-            width: 100%;
-            aspect-ratio: 1/1;
-            background: #000;
-            object-fit: cover;
-            border: 1px inset #fff;
-        }
-
-        .album-name {
-            font-size: 10px;
-            margin-top: 5px;
-            display: block;
-            height: 24px;
-            overflow: hidden;
-            line-height: 1.2;
-        }
-
-        .status-bar {
-            border-top: 1px solid #808080;
-            margin-top: 10px;
-            padding-top: 5px;
             display: flex;
-            gap: 5px;
+            align-items: center;
+            gap: 10px;
+            text-shadow: var(--glow);
+        }
+
+        .section-title::after {
+            content: "";
+            flex-grow: 1;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(0,255,102,0.2), transparent);
+        }
+
+        /* Сетка карточек */
+        .node-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .node-link {
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid var(--border-color);
+            text-decoration: none;
+            color: var(--text-main);
+            transition: all 0.25s ease;
+        }
+
+        .node-link:hover {
+            border-color: var(--accent-green);
+            background: rgba(0, 255, 102, 0.03);
+            box-shadow: var(--glow);
+            transform: translateY(-2px);
+        }
+
+        .node-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 6px;
+        }
+
+        .node-title {
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .node-link:hover .node-title {
+            color: var(--accent-green);
+        }
+
+        .node-icon {
+            color: var(--text-muted);
+            transition: color 0.2s;
+        }
+
+        .node-link:hover .node-icon {
+            color: var(--accent-green);
+            filter: drop-shadow(var(--glow));
+        }
+
+        .node-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+
+        .node-meta {
             font-size: 10px;
+            color: var(--accent-purple);
+            margin-top: 10px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Соцсети */
+        .social-links {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 30px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 12px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-main);
+            font-size: 12px;
+            text-decoration: none;
+            transition: 0.2s;
+        }
+
+        .social-btn i {
+            color: var(--text-muted);
+        }
+
+        .social-btn:hover {
+            border-color: var(--accent-purple);
+            color: #fff;
+            background: rgba(189, 0, 255, 0.05);
+            box-shadow: var(--glow-purple);
+        }
+
+        .social-btn:hover i {
+            color: var(--accent-purple);
+        }
+
+        .term-footer {
+            padding: 10px 20px;
+            border-top: 1px solid var(--border-color);
+            background: rgba(5, 5, 8, 0.8);
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--text-muted);
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.3; }
+            50% { opacity: 1; }
+            100% { opacity: 0.3; }
+        }
+
+        @media (max-width: 768px) {
+            .term-grid { grid-template-columns: 1fr; }
+            .term-sidebar { border-right: none; border-bottom: 1px solid var(--border-color); }
+            body { padding: 10px; }
         }
     </style>
 </head>
 <body>
 
-<div class="window">
-    <div class="title-bar">
-        <div class="title-bar-text">🌐 C:\Sholdue\index.html</div>
-        <div class="title-bar-controls">
-            <div class="win-btn">_</div>
-            <div class="win-btn">□</div>
-            <div class="win-btn">×</div>
+<div class="terminal-container">
+    <!-- Header -->
+    <div class="term-header">
+        <div class="term-status">
+            <div class="pulse-dot"></div>
+            <span>WIRED_NODE // ONLINE</span>
+        </div>
+        <div style="color: var(--text-muted);">HOST: SHOLDUE_GATE</div>
+    </div>
+
+    <!-- Main Workspace -->
+    <div class="term-grid">
+        
+        <!-- Sidebar -->
+        <div class="term-sidebar">
+            <div class="avatar-area">
+                <i data-lucide="cpu" style="width: 48px; height: 48px;"></i>
+            </div>
+            
+            <h1 class="profile-title">Sholdue</h1>
+            <span class="profile-tag">Independent Dev</span>
+
+            <div class="info-block">
+                <span class="info-label"><i data-lucide="terminal" style="width:12px;"></i> Specs</span>
+                JS, TS, GDScript
+            </div>
+
+            <div class="info-block">
+                <span class="info-label"><i data-lucide="layers" style="width:12px;"></i> Focus</span>
+                Gamedesign & Architecture
+            </div>
+
+            <div class="info-block">
+                <span class="info-label"><i data-lucide="hash" style="width:12px;"></i> Signal</span>
+                <span style="color: var(--accent-green); text-shadow: var(--glow);">#brgzwillfind</span>
+            </div>
+
+            <div class="social-links">
+                <span class="info-label"><i data-lucide="share-2" style="width:12px;"></i> External Sync</span>
+                <a href="https://github.com/sholdue" target="_blank" class="social-btn">
+                    <i data-lucide="github" style="width:16px;"></i>
+                    <span>GitHub Profile</span>
+                </a>
+                <a href="https://www.reddit.com/user/Desperate-Unit9812/" target="_blank" class="social-btn">
+                    <i data-lucide="message-square" style="width:16px;"></i>
+                    <span>Reddit Unit</span>
+                </a>
+                <div class="social-btn" style="cursor: default;">
+                    <i data-lucide="message-circle" style="width:16px;"></i>
+                    <span>Discord: <span style="color: var(--accent-purple);">icepicklodge</span></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="term-main">
+            
+            <!-- Section 1 -->
+            <div class="content-section">
+                <div class="section-title">Active_Processes (Current Projects)</div>
+                <div class="node-grid">
+                    <a href="https://discord.gg/kub6gX4mTb" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">Make me sad</div>
+                            <i data-lucide="external-link" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">Primary operation link. Join the core development hub.</div>
+                        <div class="node-meta"><i data-lucide="activity" style="width:10px;"></i> Status: Active</div>
+                    </a>
+                    <a href="https://x.com/re_serialexp" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">RE: Serial experiments</div>
+                            <i data-lucide="external-link" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">Assisting the structural reconstruction of the Wired universe.</div>
+                        <div class="node-meta"><i data-lucide="git-branch" style="width:10px;"></i> Status: Contributing</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Section 2 -->
+            <div class="content-section">
+                <div class="section-title">Data_Packages (Other Stuff)</div>
+                <div class="node-grid">
+                    <a href="https://store.steampowered.com/app/2824230/last_seen_online/" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">last_seen_online</div>
+                            <i data-lucide="languages" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">Localization architecture: Russian / Ukrainian translation injection.</div>
+                        <div class="node-meta">Type: Localization</div>
+                    </a>
+                    <a href="https://github.com/bazelik-null/ENAbbq_rus" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">ENA: Dream BBQ</div>
+                            <i data-lucide="binary" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">Russian language subsystem integration for ENA framework.</div>
+                        <div class="node-meta">Type: Patch</div>
+                    </a>
+                    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2976010708" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">Q3:MME Documentation</div>
+                            <i data-lucide="file-text" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">Decrypted database reference for Quake 3 Movie Making Edition.</div>
+                        <div class="node-meta">Type: Doc_File</div>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Section 3 -->
+            <div class="content-section">
+                <div class="section-title">Recommended_Injections (Must Play)</div>
+                <div class="node-grid">
+                    <a href="https://store.steampowered.com/app/238010/Deus_Ex_Human_Revolution__Directors_Cut/" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">Deus Ex: Human Revolution</div>
+                            <i data-lucide="disc" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">Cybernetic simulation. Deep cyber-noir grid logic.</div>
+                    </a>
+                    <a href="https://store.steampowered.com/app/1410640/Syberia_The_World_Before/" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">Syberia: The World Before</div>
+                            <i data-lucide="disc" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">Mechanical narrative. Structural aesthetics.</div>
+                    </a>
+                    <a href="https://en.wikipedia.org/wiki/Fatal_Frame_(video_game)" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">零 〜zero〜 (Fatal Frame)</div>
+                            <i data-lucide="disc" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">The classic psychological horror frequency.</div>
+                    </a>
+                    <a href="https://store.steampowered.com/app/410710/System_Shock_Enhanced_Edition/" target="_blank" class="node-link">
+                        <div class="node-header">
+                            <div class="node-title">System Shock: EE</div>
+                            <i data-lucide="disc" class="node-icon" style="width:16px;"></i>
+                        </div>
+                        <div class="node-desc">Citadel Station core logs. SHODAN interface protocols.</div>
+                    </a>
+                </div>
+            </div>
+
         </div>
     </div>
 
-    <div class="window-body">
-        <h1>Sholdue</h1>
-        <p style="font-size: 12px;"><b>Programmer</b> (JS, TS, GDScript.)</p>
-        <p><b>indie developer</b> (Gamedesign, Programming). </p>
-        <p><b>#brgzwillfind</b></p>
-        <div class="social-bar">
-            <a href="https://github.com/sholdue" class="social-item">
-                <img src="https://img.icons8.com/ios-filled/50/000000/github.png" class="pixel-icon"> GitHub
-            </a>
-            <a href="https://www.reddit.com/user/Desperate-Unit9812/" class="social-item">
-                <img src="https://img.icons8.com/ios-filled/50/000000/reddit.png" class="pixel-icon"> Reddit
-            </a>
-            <div class="social-item">
-                <img src="https://img.icons8.com/ios-filled/50/000000/discord-logo.png" class="pixel-icon"> 
-                icepicklodge
-            </div>
-        </div>
-
-        <div class="content-inset">
-            <h2>Current projects</h2>
-            <ul>
-                <li><a href="https://discord.gg/kub6gX4mTb">Make me sad</a></li>
-                <li>Helping: <a href="https://x.com/re_serialexp">RE: Serial experiments</a></li>
-            </ul>
-
-            <h2>Other stuff</h2>
-            <ul>
-                <li><a href="https://store.steampowered.com/app/2824230/last_seen_online/">Russian/Ukrainian for "last seen online"</a></li>
-                <li><a href="https://github.com/bazelik-null/ENAbbq_rus">Russian for ENA: Dream BBQ</a></li>
-                <li><a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2976010708">Documentation for Q3:MME</a></li>
-            </ul>
-        </div>
-
-        <h2>I recommend</h2>
-        <div class="content-inset">
-            <span class="category-header">Must play</span>
-            <ul>
-                <li><a href="https://store.steampowered.com/app/238010/Deus_Ex_Human_Revolution__Directors_Cut/">Deus Ex: Human Revolution</a></li>
-                <li><a href="https://store.steampowered.com/app/1410640/Syberia_The_World_Before/">Syberia: The World Before</a></li>
-                <li><a href="https://en.wikipedia.org/wiki/Fatal_Frame_(video_game)">Fatal Frame</a></li>
-                <li><a href="https://store.steampowered.com/app/410710/System_Shock_Enhanced_Edition/">System Shock: EE</a></li>
-                <li><a href="https://store.steampowered.com/app/283290/Nosferatu_The_Wrath_of_Malachi/">Nosferatu: The Wrath of Malachi</a></li>
-            </ul>
-
-            <span class="category-header">Good</span>
-            <ul>
-                <li><a href="https://store.steampowered.com/app/1262350/SIGNALIS/">SIGNALIS</a></li>
-                <li><a href="https://store.steampowered.com/app/2200/Quake_III_Arena/">Quake III Arena</a></li>
-                <li><a href="https://store.steampowered.com/bundle/3782/Fallout_Franchise_Bundle/">Fallout (1, 2, 3)</a></li>
-                <li><a href="https://store.steampowered.com/app/1002300/Fear__Hunger/">Fear & Hunger</a></li>
-                <li><a href="https://store.steampowered.com/app/2622380/ELDEN_RING_NIGHTREIGN/">ELDEN RING NIGHTREIGN</a></li>
-                <li><a href="https://store.steampowered.com/app/760160/Vampire_The_Masquerade__Bloodhunt/">Vampire: Bloodhunt</a></li>
-                <li><a href="https://store.steampowered.com/app/255320/Edna__Harvey_The_Breakout/">Edna & Harvey</a></li>
-                <li><a href="https://store.steampowered.com/app/1386900/Observer_System_Redux/">Observer: System Redux</a></li>
-            </ul>
-        </div>
-
-        <h2>Music Favorites</h2>
-        <div class="music-section">
-            <div class="album-card">
-                <img src="https://f4.bcbits.com/img/a0393374401_16.jpg" class="album-cover">
-                <span class="album-name">Agent Side Grinder - Stripdown</span>
-            </div>
-            <div class="album-card">
-                <img src="https://m.media-amazon.com/images/I/71EYmWxcmdL._UF1000,1000_QL80_.jpg" class="album-cover">
-                <span class="album-name">Kanye West - My Beautiful Dark Twisted Fantasy</span>
-            </div>
-            <div class="album-card">
-                <img src="https://i.scdn.co/image/ab67616d0000b273cfd93d36fe2365f9436587d1" class="album-cover">
-                <span class="album-name">Anri - Timely!!</span>
-            </div>
-            <div class="album-card">
-                <img src="https://i.discogs.com/N8yseavoo9ZQ2IyqHSW3pDs2ADALXKQ1sbUA03Qd8aI/rs:fit/g:sm/q:40/h:300/w:300/czM6Ly9kaXNjb2dz/LWRhdGFiYXNlLWlt/YWdlcy9SLTEzNzY3/NDI2LTE1NjA2ODY1/MjUtODI4NC5qcGVn.jpeg" class="album-cover">
-                <span class="album-name">ZABADAK - Pieces Of The Moon</span>
-            </div>
-            <div class="album-card">
-                <img src="https://media.pitchfork.com/photos/5929ae46c0084474cd0c188c/master/pass/04192b63.jpg" class="album-cover">
-                <span class="album-name">Tame Impala - Currents</span>
-            </div>
-
-        </div>
-
-        <div class="status-bar">
-            <span>Items: 20</span>
-            <span>|</span>
-            <span>Mem: 640KB</span>
-            <span>|</span>
-            <span style="color: green;">● System OK</span>
-        </div>
+    <!-- Footer -->
+    <div class="term-footer">
+        <div>SYS_MEM: 640KB // CACHE: OK</div>
+        <div id="clock">00:00:00</div>
     </div>
 </div>
+
+<script>
+    // Инициализация иконок Lucide
+    lucide.createIcons();
+
+    function updateClock() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+</script>
 
 </body>
 </html>
