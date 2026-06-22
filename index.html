@@ -1,475 +1,66 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SHOLDUE // WIRED_GATE_v4.26</title>
-    <!-- Подключаем пак иконок Lucide для киберпанк-элементов -->
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <title>SHOLDUE // WIRED</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;700&family=DotGothic16&display=swap');
-
-        :root {
-            --bg-color: #0a0a0f;
-            --panel-bg: rgba(16, 16, 24, 0.85);
-            --border-color: #2a2b3d;
-            --accent-green: #00ff66;
-            --accent-purple: #bd00ff;
-            --text-main: #e2e4f0;
-            --text-muted: #626585;
-            --glow: 0 0 10px rgba(0, 255, 102, 0.3);
-            --glow-purple: 0 0 10px rgba(189, 0, 255, 0.3);
-        }
-
-        * {
-            box-sizing: border-box;
-        }
-
         body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            font-family: 'Fira Code', 'DotGothic16', monospace;
-            margin: 0;
+            background: #0a0a0a;
+            color: #cccccc;
+            font-family: monospace;
             padding: 40px 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow-x: hidden;
-            position: relative;
+            max-width: 500px;
+            margin: 0 auto;
+            line-height: 1.5;
         }
 
-        /* Эффект ЭЛТ-монитора */
-        body::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
-            z-index: 999;
-            background-size: 100% 4px, 6px 100%;
-            pointer-events: none;
-        }
-
-        .terminal-container {
-            width: 100%;
-            max-width: 950px;
-            background: var(--panel-bg);
-            border: 1px solid var(--border-color);
-            border-top: 4px solid var(--accent-purple);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-            backdrop-filter: blur(4px);
-        }
-
-        .term-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 20px;
-            border-bottom: 1px solid var(--border-color);
-            font-size: 12px;
-            letter-spacing: 1px;
-        }
-
-        .term-status {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--accent-green);
-            text-shadow: var(--glow);
-        }
-
-        .pulse-dot {
-            width: 6px;
-            height: 6px;
-            background: var(--accent-green);
-            border-radius: 50%;
-            animation: pulse 1.5s infinite;
-        }
-
-        .term-grid {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            min-height: 550px;
-        }
-
-        /* Сайдбар */
-        .term-sidebar {
-            border-right: 1px solid var(--border-color);
-            padding: 30px 20px;
-            background: rgba(8, 8, 12, 0.5);
-        }
-
-        .avatar-area {
-            border: 1px dashed var(--border-color);
-            padding: 20px;
-            text-align: center;
-            margin-bottom: 25px;
-            color: var(--accent-purple);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .profile-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #fff;
-            margin: 0 0 5px 0;
-            letter-spacing: -0.5px;
-        }
-
-        .profile-tag {
-            font-size: 11px;
-            color: var(--accent-purple);
-            text-transform: uppercase;
-            font-weight: bold;
-            display: block;
-            margin-bottom: 20px;
-        }
-
-        .info-block {
-            margin-bottom: 20px;
-            font-size: 13px;
-            line-height: 1.6;
-        }
-
-        .info-label {
-            color: var(--text-muted);
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        /* Основная панель */
-        .term-main {
-            padding: 30px;
-            overflow-y: auto;
-        }
-
-        .content-section {
-            margin-bottom: 35px;
-        }
-
-        .section-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: var(--accent-green);
-            letter-spacing: 2px;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            text-shadow: var(--glow);
-        }
-
-        .section-title::after {
-            content: "";
-            flex-grow: 1;
-            height: 1px;
-            background: linear-gradient(90deg, rgba(0,255,102,0.2), transparent);
-        }
-
-        /* Сетка карточек */
-        .node-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 12px;
-        }
-
-        .node-link {
-            display: flex;
-            flex-direction: column;
-            padding: 15px;
-            background: rgba(255,255,255,0.02);
-            border: 1px solid var(--border-color);
-            text-decoration: none;
-            color: var(--text-main);
-            transition: all 0.25s ease;
-        }
-
-        .node-link:hover {
-            border-color: var(--accent-green);
-            background: rgba(0, 255, 102, 0.03);
-            box-shadow: var(--glow);
-            transform: translateY(-2px);
-        }
-
-        .node-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 6px;
-        }
-
-        .node-title {
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .node-link:hover .node-title {
-            color: var(--accent-green);
-        }
-
-        .node-icon {
-            color: var(--text-muted);
-            transition: color 0.2s;
-        }
-
-        .node-link:hover .node-icon {
-            color: var(--accent-green);
-            filter: drop-shadow(var(--glow));
-        }
-
-        .node-desc {
-            font-size: 12px;
-            color: var(--text-muted);
-            line-height: 1.4;
-            flex-grow: 1;
-        }
-
-        .node-meta {
-            font-size: 10px;
-            color: var(--accent-purple);
-            margin-top: 10px;
-            text-transform: uppercase;
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-
-        /* Соцсети */
-        .social-links {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 30px;
-        }
-
-        .social-btn {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-main);
-            font-size: 12px;
-            text-decoration: none;
-            transition: 0.2s;
-        }
-
-        .social-btn i {
-            color: var(--text-muted);
-        }
-
-        .social-btn:hover {
-            border-color: var(--accent-purple);
-            color: #fff;
-            background: rgba(189, 0, 255, 0.05);
-            box-shadow: var(--glow-purple);
-        }
-
-        .social-btn:hover i {
-            color: var(--accent-purple);
-        }
-
-        .term-footer {
-            padding: 10px 20px;
-            border-top: 1px solid var(--border-color);
-            background: rgba(5, 5, 8, 0.8);
-            display: flex;
-            justify-content: space-between;
-            font-size: 11px;
-            color: var(--text-muted);
-        }
-
-        @keyframes pulse {
-            0% { opacity: 0.3; }
-            50% { opacity: 1; }
-            100% { opacity: 0.3; }
-        }
-
-        @media (max-width: 768px) {
-            .term-grid { grid-template-columns: 1fr; }
-            .term-sidebar { border-right: none; border-bottom: 1px solid var(--border-color); }
-            body { padding: 10px; }
-        }
+        h1 { font-size: 18px; color: #fff; margin: 0 0 5px 0; }
+        subtitle { color: #555; font-size: 12px; display: block; margin-bottom: 40px; }
+        
+        h2 { font-size: 12px; color: #00ff66; text-transform: uppercase; margin-bottom: 15px; letter-spacing: 1px; }
+        
+        ul { list-style: none; padding: 0; margin: 0 0 40px 0; }
+        li { margin-bottom: 12px; }
+        
+        a { color: #cccccc; text-decoration: none; }
+        a:hover { color: #00ff66; text-decoration: underline; }
+        
+        .desc { color: #555; font-size: 12px; display: block; }
+        .discord { color: #bd00ff; }
     </style>
 </head>
 <body>
 
-<div class="terminal-container">
-    <!-- Header -->
-    <div class="term-header">
-        <div class="term-status">
-            <div class="pulse-dot"></div>
-            <span>WIRED_NODE // ONLINE</span>
-        </div>
-        <div style="color: var(--text-muted);">HOST: SHOLDUE_GATE</div>
-    </div>
+    <h1>sholdue</h1>
+    <subtitle>dev // gdscript, ts, js</subtitle>
 
-    <!-- Main Workspace -->
-    <div class="term-grid">
-        
-        <!-- Sidebar -->
-        <div class="term-sidebar">
-            <div class="avatar-area">
-                <i data-lucide="cpu" style="width: 48px; height: 48px;"></i>
-            </div>
-            
-            <h1 class="profile-title">Sholdue</h1>
-            <span class="profile-tag">Independent Dev</span>
+    <h2>projects</h2>
+    <ul>
+        <li>
+            <a href="https://discord.gg/kub6gX4mTb" target="_blank">make me sad</a>
+            <span class="desc">core development hub.</span>
+        </li>
+        <li>
+            <a href="https://x.com/re_serialexp" target="_blank">re: serial experiments</a>
+            <span class="desc">wired universe reconstruction.</span>
+        </li>
+        <li>
+            <a href="https://store.steampowered.com/app/2824230/last_seen_online/" target="_blank">last_seen_online</a>
+            <span class="desc">ru/ua localization.</span>
+        </li>
+        <li>
+            <a href="https://github.com/bazelik-null/ENAbbq_rus" target="_blank">ena: dream bbq</a>
+            <span class="desc">russian language patch.</span>
+        </li>
+    </ul>
 
-            <div class="info-block">
-                <span class="info-label"><i data-lucide="terminal" style="width:12px;"></i> Specs</span>
-                JS, TS, GDScript
-            </div>
-
-            <div class="info-block">
-                <span class="info-label"><i data-lucide="layers" style="width:12px;"></i> Focus</span>
-                Gamedesign & Architecture
-            </div>
-
-            <div class="info-block">
-                <span class="info-label"><i data-lucide="hash" style="width:12px;"></i> Signal</span>
-                <span style="color: var(--accent-green); text-shadow: var(--glow);">#brgzwillfind</span>
-            </div>
-
-            <div class="social-links">
-                <span class="info-label"><i data-lucide="share-2" style="width:12px;"></i> External Sync</span>
-                <a href="https://github.com/sholdue" target="_blank" class="social-btn">
-                    <i data-lucide="github" style="width:16px;"></i>
-                    <span>GitHub Profile</span>
-                </a>
-                <a href="https://www.reddit.com/user/Desperate-Unit9812/" target="_blank" class="social-btn">
-                    <i data-lucide="message-square" style="width:16px;"></i>
-                    <span>Reddit Unit</span>
-                </a>
-                <div class="social-btn" style="cursor: default;">
-                    <i data-lucide="message-circle" style="width:16px;"></i>
-                    <span>Discord: <span style="color: var(--accent-purple);">icepicklodge</span></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Main Content -->
-        <div class="term-main">
-            
-            <!-- Section 1 -->
-            <div class="content-section">
-                <div class="section-title">Active_Processes (Current Projects)</div>
-                <div class="node-grid">
-                    <a href="https://discord.gg/kub6gX4mTb" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">Make me sad</div>
-                            <i data-lucide="external-link" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">Primary operation link. Join the core development hub.</div>
-                        <div class="node-meta"><i data-lucide="activity" style="width:10px;"></i> Status: Active</div>
-                    </a>
-                    <a href="https://x.com/re_serialexp" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">RE: Serial experiments</div>
-                            <i data-lucide="external-link" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">Assisting the structural reconstruction of the Wired universe.</div>
-                        <div class="node-meta"><i data-lucide="git-branch" style="width:10px;"></i> Status: Contributing</div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Section 2 -->
-            <div class="content-section">
-                <div class="section-title">Data_Packages (Other Stuff)</div>
-                <div class="node-grid">
-                    <a href="https://store.steampowered.com/app/2824230/last_seen_online/" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">last_seen_online</div>
-                            <i data-lucide="languages" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">Localization architecture: Russian / Ukrainian translation injection.</div>
-                        <div class="node-meta">Type: Localization</div>
-                    </a>
-                    <a href="https://github.com/bazelik-null/ENAbbq_rus" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">ENA: Dream BBQ</div>
-                            <i data-lucide="binary" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">Russian language subsystem integration for ENA framework.</div>
-                        <div class="node-meta">Type: Patch</div>
-                    </a>
-                    <a href="https://steamcommunity.com/sharedfiles/filedetails/?id=2976010708" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">Q3:MME Documentation</div>
-                            <i data-lucide="file-text" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">Decrypted database reference for Quake 3 Movie Making Edition.</div>
-                        <div class="node-meta">Type: Doc_File</div>
-                    </a>
-                </div>
-            </div>
-
-            <!-- Section 3 -->
-            <div class="content-section">
-                <div class="section-title">Recommended_Injections (Must Play)</div>
-                <div class="node-grid">
-                    <a href="https://store.steampowered.com/app/238010/Deus_Ex_Human_Revolution__Directors_Cut/" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">Deus Ex: Human Revolution</div>
-                            <i data-lucide="disc" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">Cybernetic simulation. Deep cyber-noir grid logic.</div>
-                    </a>
-                    <a href="https://store.steampowered.com/app/1410640/Syberia_The_World_Before/" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">Syberia: The World Before</div>
-                            <i data-lucide="disc" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">Mechanical narrative. Structural aesthetics.</div>
-                    </a>
-                    <a href="https://en.wikipedia.org/wiki/Fatal_Frame_(video_game)" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">零 〜zero〜 (Fatal Frame)</div>
-                            <i data-lucide="disc" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">The classic psychological horror frequency.</div>
-                    </a>
-                    <a href="https://store.steampowered.com/app/410710/System_Shock_Enhanced_Edition/" target="_blank" class="node-link">
-                        <div class="node-header">
-                            <div class="node-title">System Shock: EE</div>
-                            <i data-lucide="disc" class="node-icon" style="width:16px;"></i>
-                        </div>
-                        <div class="node-desc">Citadel Station core logs. SHODAN interface protocols.</div>
-                    </a>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
-    <!-- Footer -->
-    <div class="term-footer">
-        <div>SYS_MEM: 640KB // CACHE: OK</div>
-        <div id="clock">00:00:00</div>
-    </div>
-</div>
-
-<script>
-    // Инициализация иконок Lucide
-    lucide.createIcons();
-
-    function updateClock() {
-        const now = new Date();
-        document.getElementById('clock').textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
-    }
-    setInterval(updateClock, 1000);
-    updateClock();
-</script>
+    <h2>links</h2>
+    <ul>
+        <li><a href="https://github.com/sholdue" target="_blank">github</a></li>
+        <li><a href="https://www.reddit.com/user/Desperate-Unit9812/" target="_blank">reddit</a></li>
+        <li>discord: <span class="discord">icepicklodge</span></li>
+    </ul>
 
 </body>
 </html>
